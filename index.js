@@ -22,6 +22,7 @@ const TodosCoontroller = require("./controllers/todos");
 app.group("/api/v1", router => {
   // todos api call the controller here in the callback
   router.get("/todos", TodosCoontroller.index);
+  router.patch("/todos/:id", TodosCoontroller.update);
   router.get("/todos/:id", TodosCoontroller.show);
   router.post("/todos", TodosCoontroller.store);
   router.delete("/todos/:id", TodosCoontroller.destroy);
@@ -30,23 +31,23 @@ app.group("/api/v1", router => {
 // end import data the controllers
 
 // make hardcode array of obj todos
-const todos = [
-  {
-    id: 1,
-    title: "walking with Lucinta",
-    isDone: true
-  },
-  {
-    id: 2,
-    title: "walking with Lucinta",
-    isDone: true
-  },
-  {
-    id: 3,
-    title: "walking with Lucinta",
-    isDone: true
-  }
-];
+// const todos = [
+//   {
+//     id: 1,
+//     title: "walking with Lucinta",
+//     isDone: true
+//   },
+//   {
+//     id: 2,
+//     title: "walking with Lucinta",
+//     isDone: true
+//   },
+//   {
+//     id: 3,
+//     title: "walking with Lucinta",
+//     isDone: true
+//   }
+// ];
 
 // using group route
 
