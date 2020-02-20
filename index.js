@@ -22,9 +22,9 @@ const TodosCoontroller = require("./controllers/todos");
 app.group("/api/v1", router => {
   // todos api call the controller here in the callback
   router.get("/todos", TodosCoontroller.index);
-  router.patch("/todos/:id", TodosCoontroller.update);
-  router.get("/todos/:id", TodosCoontroller.show);
   router.post("/todos", TodosCoontroller.store);
+  router.get("/todos/:id", TodosCoontroller.show);
+  router.patch("/todos/:id", TodosCoontroller.update);
   router.delete("/todos/:id", TodosCoontroller.destroy);
 });
 

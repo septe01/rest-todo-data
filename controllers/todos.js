@@ -1,75 +1,167 @@
 // using database
 //impor connection
-const connection = require("../koneksi/db");
+// const connection = require("../koneksi/db");
+const Todo = require("../models").todo;
 
 exports.index = (req, res) => {
-  connection.query("SELECT * FROM todos", (err, rows) => {
-    if (err) throw err;
-
-    res.send({
-      status: "200",
-      message: "success",
-      rows
-    });
-  });
+  Todo.findAll().then(todos => res.send(todos));
 };
 
 exports.show = (req, res) => {
-  const id = req.params.id;
-  connection.query(`SELECT * FROM todos WHERE id=${id}`, (err, rows) => {
-    if (err) throw err;
-    res.send({
-      status: "200",
-      message: "success",
-      rows
-    });
+  Todo.findOne({ where: { id: req.params.id } }).then(todo => {
+    if (todo != null) {
+      res.status(200).send({
+        status: 200,
+        message: "success",
+        todo
+      });
+    } else {
+      res.status(404).send({
+        status: 404,
+        message: "not founds"
+      });
+    }
   });
 };
 
 exports.store = (req, res) => {
-  const { title, isDone } = req.body;
-
-  connection.query(
-    `INSERT INTO todos (title, isDone) VALUES('${title}', '${isDone}')`,
-    err => {
-      if (err) throw err;
+  const { title, is_done, created_by } = req.body;
+  Todo.create({
+    title: title,
+    is_done: is_done,
+    created_by: created_by
+  }).then(data => {
+    if (data != null) {
+      res.status(200).send({
+        status: 200,
+        message: "success",
+        data
+      });
+    } else {
+      res.status(404).send({
+        status: 404,
+        message: "failed"
+      });
     }
-  );
-  res.send({ status: "200", success: true, data: req.body });
-
-  // res.send(req.body);
+  });
 };
 
 exports.update = (req, res) => {
-  const { title, isDone } = req.body;
-
-  connection.query(
-    `UPDATE todos SET title = '${title}',isDone = '${isDone}' WHERE id = ${req.params.id}`,
-    (err, data) => {
-      if (err) throw err;
-
-      if (data.affectedRows == 1) {
-        res.send({ status: "200", success: true, data: req.body });
-      } else {
-        res.send({ status: "404", success: false });
-      }
+  const { title, is_done, created_by } = req.body;
+  Todo.update(
+    {
+      title: title,
+      is_done: is_done,
+      created_by: created_by
+    },
+    {
+      where: { id: req.params.id }
     }
-  );
+  ).then(data => {
+    if (data != 0) {
+      res.status(200).send({
+        status: 200,
+        message: "success",
+        data
+      });
+    } else {
+      res.status(404).send({
+        status: 404,
+        message: "failed"
+      });
+    }
+  });
 };
 
 exports.destroy = (req, res) => {
-  connection.query(
-    `DELETE FROM todos WHERE id='${req.params.id}'`,
-    (err, data) => {
-      if (err) throw err;
-      if (data.affectedRows == 1) {
-        res.send({ status: "200", success: true });
-      } else {
-        res.send({ status: "404", success: false });
-      }
+  Todo.findOne({ where: { id: req.params.id } }).then(todo => {
+    if (todo != null) {
+      Todo.destroy({ where: { id: req.params.id } }).then(todos => {
+        res.send({
+          status: 200,
+          message: "success"
+        });
+      });
+    } else {
+      res.status(404).send({
+        status: 404,
+        message: "not founds"
+      });
     }
-  );
+  });
 };
+
+// using query kompensional
+// exports.index = (req, res) => {
+//   connection.query("SELECT * FROM todos", (err, rows) => {
+//     if (err) throw err;
+
+//     res.send({
+//       status: "200",
+//       message: "success",
+//       rows
+//     });
+//   });
+// };
+
+// exports.show = (req, res) => {
+//   const id = req.params.id;
+//   connection.query(`SELECT * FROM todos WHERE id=${id}`, (err, rows) => {
+//     if (err) throw err;
+//     res.send({
+//       status: "200",
+//       message: "success",
+//       rows
+//     });
+//   });
+// };
+
+// exports.store = (req, res) => {
+//   const { title, isDone } = req.body;
+
+//   connection.query(
+//     `INSERT INTO todos (title, isDone) VALUES('${title}', '${isDone}')`,
+//     err => {
+//       if (err) throw err;
+//     }
+//   );
+//   res.send({ status: "200", success: true, data: req.body });
+
+//   // res.send(req.body);
+// };
+
+// exports.update = (req, res) => {
+//   const { title, isDone } = req.body;
+
+//   connection.query(
+//     `UPDATE todos SET title = '${title}',isDone = '${isDone}' WHERE id = ${req.params.id}`,
+//     (err, data) => {
+//       if (err) throw err;
+
+//       if (data.affectedRows == 1) {
+//         res.send({ status: "200", success: true, data: req.body });
+//       } else {
+//         res.send({ status: "404", success: false });
+//       }
+//     }
+//   );
+// };
+
+// exports.destroy = (req, res) => {
+//   connection.query(
+//     `DELETE FROM todos WHERE id='${req.params.id}'`,
+//     (err, data) => {
+//       if (err) throw err;
+//       if (data.affectedRows == 1) {
+//         res.send({ status: "200", success: true });
+//       } else {
+//         res.send({ status: "404", success: false });
+//       }
+//     }
+//   );
+// };
+
+// end using query kompensional
 
 // const todos = [
 //   {
