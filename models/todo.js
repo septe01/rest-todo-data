@@ -9,8 +9,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
+
   todo.associate = function(models) {
     // associations can be defined here
+    //one to one
+    todo.belongsTo(models.user, {
+      as: "createdBy",
+      foreignkey: "created_by"
+    });
   };
   return todo;
 };
