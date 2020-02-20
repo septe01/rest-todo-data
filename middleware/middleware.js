@@ -13,3 +13,10 @@ exports.authenticated = (req, res, next) => {
 
 // In the next step we enter the file
 // "middleware.js" into the file "index.js"
+
+// middle-ware using jwt
+// const expressJwt = require("express-jwt");
+
+// exports.authenticated = expressJwt({ secret: "my-secret-key" });
+
+// ({secret: 'my-secret-key'})
