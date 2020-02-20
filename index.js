@@ -8,6 +8,8 @@ require("express-group-routes");
 // init body-parser
 const bodyParser = require("body-parser");
 
+const { authenticated } = require("./middleware/middleware");
+
 // use express in app variable
 const app = express();
 //define the server
@@ -21,11 +23,11 @@ const TodosCoontroller = require("./controllers/todos");
 
 app.group("/api/v1", router => {
   // todos api call the controller here in the callback
-  router.get("/todos", TodosCoontroller.index);
-  router.post("/todos", TodosCoontroller.store);
-  router.get("/todos/:id", TodosCoontroller.show);
-  router.patch("/todos/:id", TodosCoontroller.update);
-  router.delete("/todos/:id", TodosCoontroller.destroy);
+  router.get("/todos", authenticated, TodosCoontroller.index);
+  router.post("/todos", authenticated, TodosCoontroller.store);
+  router.get("/todos/:id", authenticated, TodosCoontroller.show);
+  router.patch("/todos/:id", authenticated, TodosCoontroller.update);
+  router.delete("/todos/:id", authenticated, TodosCoontroller.destroy);
 });
 
 // end import data the controllers
